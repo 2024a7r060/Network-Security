@@ -1,87 +1,92 @@
-def caesar_encrypt(text: str, shift: int) -> str:
-    result = []
+#for case cipher
+def caesar_encrypt(plaintext, shift):
+    result = ""
 
-    for char in text:
-        if char.isalpha():
-            base = ord('A') if char.isupper() else ord('a')
-            new_pos = (ord(char) - base + shift) % 26
-            result.append(chr(new_pos + base))
+    for p in plaintext:
+        if p.isupper():
+            result += chr((ord(p) - ord('A') + shift) % 26 + ord('A'))
+        elif p.islower():
+            result += chr((ord(p) - ord('a') + shift) % 26 + ord('a'))
         else:
-            result.append(char)
+            result += p
 
-    return "".join(result)
+    return result
 
 
-def caesar_decrypt(text: str, shift: int) -> str:
-    result = []
+def caesar_decrypt(ciphertext, shift):
+    result = ""
 
-    for char in text:
-        if char.isalpha():
-            base = ord('A') if char.isupper() else ord('a')
-            new_pos = (ord(char) - base - shift) % 26
-            result.append(chr(new_pos + base))
+    for c in ciphertext:
+        if c.isupper():
+            result += chr((ord(c) - ord('A') - shift) % 26 + ord('A'))
+        elif c.islower():
+            result += chr((ord(c) - ord('a') - shift) % 26 + ord('a'))
         else:
-            result.append(char)
+            result += c
 
-    return "".join(result)
-
-
+    return result
 
 
-def vigenere_encrypt(text: str, key: str) -> str:
-    result = []
+# Input
+plaintext = input("Enter text: ")
+shift = int(input("Enter shift: "))
+
+# Encryption
+ciphertext = caesar_encrypt(plaintext, shift)
+print("Encrypted text:", ciphertext)
+
+# Decryption
+decrypted_text = caesar_decrypt(ciphertext, shift)
+print("Decrypted text:", decrypted_text)
+
+#for vigenere cipher
+
+def vigenere_encrypt(plaintext, key):
+    result = ""
+    key = key.upper()
     key_index = 0
 
-    for char in text:
+    for char in plaintext:
         if char.isalpha():
-            base = ord('A') if char.isupper() else ord('a')
-            key_char = key[key_index % len(key)]
-            shift = ord(key_char.upper()) - ord('A')
-            new_pos = (ord(char) - base + shift) % 26
-            result.append(chr(new_pos + base))
+            shift = ord(key[key_index % len(key)]) - ord("A")
+            encrypted = chr(
+                (ord(char.upper()) - ord("A") + shift) % 26 + ord("A")
+            )
+            result += encrypted
             key_index += 1
-
         else:
-            result.append(char)
+            result += char
 
-    return "".join(result)
+    return result
 
-def vigenere_decrypt(text: str, key: str) -> str:
-    result = []
+
+def vigenere_decrypt(ciphertext, key):
+    result = ""
+    key = key.upper()
     key_index = 0
 
-    for char in text:
+    for char in ciphertext:
         if char.isalpha():
-
-            base = ord('A') if char.isupper() else ord('a')
-            key_char = key[key_index % len(key)]
-            shift = ord(key_char.upper()) - ord('A')
-            new_pos = (ord(char) - base - shift) % 26
-            result.append(chr(new_pos + base))
+            shift = ord(key[key_index % len(key)]) - ord("A")
+            decrypted = chr(
+                (ord(char.upper()) - ord("A") - shift) % 26 + ord("A")
+            )
+            result += decrypted
             key_index += 1
         else:
-            result.append(char)
+            result += char
 
-    return "".join(result)
-
-
-# Caesar test
-message1 = "Hello Network Security"
-caesar_ct = caesar_encrypt(message1, 3)
-
-print("\n--- Caesar Cipher ---")
-print("Original:", message1)
-print("Encrypted:", caesar_ct)
-print("Decrypted:", caesar_decrypt(caesar_ct, 3))
+    return result
 
 
-# Vigenere test
-message2 = "Network Security"
-key = "key"
+# Input
+plaintext = input("Enter plaintext: ")
+key = input("Enter key: ")
 
-vigenere_ct = vigenere_encrypt(message2, key)
+# Encryption
+ciphertext = vigenere_encrypt(plaintext, key)
+print("Encrypted text:", ciphertext)
 
-print("\n--- Vigenere Cipher ---")
-print("Original:", message2)
-print("Encrypted:", vigenere_ct)
-print("Decrypted:", vigenere_decrypt(vigenere_ct, key))
+# Decryption
+decrypted_text = vigenere_decrypt(ciphertext, key)
+print("Decrypted text:", decrypted_text)
