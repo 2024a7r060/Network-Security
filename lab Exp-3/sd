@@ -1,0 +1,29 @@
+import random
+import hashlib
+SECRET = "Ayeesh123"
+def generate_nonce():
+    return str(random.randint(100000, 999999))
+def hash_response(nonce, secret):
+    message = nonce + secret
+    return hashlib.sha256(message.encode()).hexdigest()
+print("=== CHALLENGE-RESPONSE AUTHENTICATION ===")
+nonce = generate_nonce()
+print("\nServer Challenge (Nonce):", nonce)
+response = hash_response(nonce, SECRET)
+print("Client Response:", response)
+expected_response = hash_response(nonce, SECRET)
+if response == expected_response:
+    print("Authentication: SUCCESS")
+else:
+    print("Authentication: FAILED")
+print("\n=== REPLAY ATTACK SIMULATION ===")
+captured_response = response
+print("Captured Response:", captured_response)
+new_nonce = generate_nonce()
+print("New Server Challenge:", new_nonce)
+print("\nAttacker replays the old response...")
+expected_new_response = hash_response(new_nonce, SECRET)
+if captured_response == expected_new_response:
+    print("Replay Attack: SUCCESS")
+else:
+    print("Replay Attack: BLOCKED")
